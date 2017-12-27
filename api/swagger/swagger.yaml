@@ -1,0 +1,177 @@
+---
+swagger: '2.0'
+info:
+  description: ''
+  version: '0.0.1'
+  title: 'data'
+  termsOfService: ''
+  contact:
+    name: ''
+    email: 'steven.taylor@me.com'
+  license:
+    name: 'Steven Taylor'
+host: localhost
+basePath: /api
+schemes:
+- https
+consumes:
+- application/json
+
+securityDefinitions:
+  Oauth:
+    type: oauth2
+    scopes:
+      open: no security
+      user: a user
+      admin: admin user
+      system: a system process
+    flow: implicit
+    authorizationUrl: https://my_aouth/
+
+security:
+  - Oauth: []
+
+paths:
+  /health:
+    x-swagger-router-controller: health
+    get:
+      tags:
+      - health
+      operationId: health
+      security:
+      - Oauth:
+        - open
+      parameters:
+      - in: query
+        name: id
+        type: string
+      responses:
+        200:
+          description: health information
+          schema:
+            $ref: '#/definitions/Status'
+        default:
+          $ref: '#/responses/Error'
+
+  /system:
+    x-swagger-router-controller: system
+    get:
+      operationId: getSystem
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+
+  /status:
+    x-swagger-router-controller: system
+    get:
+      operationId: getStatus
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+
+  /device/{id}/status:
+    x-swagger-router-controller: system
+    get:
+      operationId: getDeviceStatus
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+
+  /{device}/{id}/*:
+    x-swagger-router-controller: proxy
+    get:
+      operationId: proxyCall
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      parameters:
+      - in: path
+        name: device
+        required: true
+        type: string
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: ok
+          schema:
+            type: string
+            format: binary
+        default:
+          $ref: '#/responses/Error'
+
+  /swagger:
+      x-swagger-pipe: swagger_raw
+
+responses:
+
+  Error:
+    description: error
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
+
+  Status:
+    type: object
+    additionalProperties: false
+    properties:
+      status:
+        type: string
+
+  AnyValue:
+    description: Can be anything, including null.
