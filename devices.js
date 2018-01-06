@@ -20,6 +20,8 @@ function devices(){
             if ( db !== undefined )
                 return fulfill(this);
 
+            global.schema = global.config.db.schema || 'sentinel';
+
             mysql.connect(global.config.db)
                 .then((connection) => {
                     console.log('connection established to database server');
@@ -27,7 +29,7 @@ function devices(){
                 })
                 .then((connection) => {
                     console.log('database has been created');
-                    return connection.useDatabase('sentinel');
+                    return connection.useDatabase(global.schema);
                 })
                 .then((database) => {
                     console.log('now using the sentinel database');
