@@ -260,10 +260,12 @@ function devices(){
 
                 try {
                     request(options, (err, response, body) => {
-                        if (!err && response.statusCode == 200) {
+                        if (!err && response.statusCode === 200) {
                             body = JSON.parse(body);
 
                             let data = body.data;
+
+                            data.status['_ts'] = new Date().toISOString();
 
                             statusCache.set(doc.id, data.status);
                         }
@@ -297,7 +299,7 @@ function devices(){
                 if (err)
                     return reject(err);
 
-                if (response.statusCode == 200) {
+                if (response.statusCode === 200) {
 
                     let response = JSON.parse(body);
 

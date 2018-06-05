@@ -25,7 +25,7 @@ function server(config) {
                 if (!value) {
                     devices.find( { id } )
                         .then( (devices) => {
-                            if (devices.length == 0)
+                            if (devices.length === 0)
                                 return reject(new Error(404));
                             else
                                 fulfill([]);
@@ -34,6 +34,7 @@ function server(config) {
                             reject(err);
                         })
                 } else {
+                    delete value._ts;
                     fulfill([value]);
                 }
 
@@ -61,9 +62,22 @@ function server(config) {
                                 delete device[key];
                         });
 
-                        if (device.active) {
-                            delete device.active;
-                            d.push(device);
+                        let current = statusCache.get(device.id);
+
+                        if (current) {
+                            if (current._ts) {
+                                let _ts = new Date(current._ts);
+                                let diff = Math.floor((new Date() - _ts) / (1000 * 60 * 60 * 24));
+
+                                if (diff > 1) {
+                                    device.active = false;
+                                }
+                            }
+
+                            if (device.active) {
+                                delete device.active;
+                                d.push(device);
+                            }
                         }
                     });
 

@@ -104,6 +104,8 @@ function messageHandler() {
                                 } else {
                                     let status = merge(current, data.value);
 
+                                    status['_ts'] = new Date().toISOString();
+
                                     if (JSON.stringify(current) !== JSON.stringify(status)) {
                                         statusCache.set(doc.id, status);
                                     }
