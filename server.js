@@ -65,13 +65,12 @@ function server(config) {
                         let current = statusCache.get(device.id);
 
                         if (current) {
+
                             if (current._ts) {
                                 let _ts = new Date(current._ts);
                                 let diff = Math.floor((new Date() - _ts) / (1000 * 60 * 60 * 24));
 
-                                if (diff > 1) {
-                                    device.active = false;
-                                }
+                                device.active = (diff > 7);
                             }
 
                             if (device.active) {
