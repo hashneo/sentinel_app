@@ -27,10 +27,14 @@ function messageHandler() {
         }
     );
 
+    let ignoreUpdate = false;
+
     statusCache.on( 'set', function( key, value ){
-        let data = JSON.stringify( { module: 'server', id : key, value : value });
-        console.log( 'sentinel.device.update => ' + data );
-        pub.publish( 'sentinel.device.update', data);
+        if ( !ignoreUpdate ) {
+            let data = JSON.stringify({module: 'server', id: key, value: value});
+            console.log('sentinel.device.update => ' + data);
+            pub.publish('sentinel.device.update', data);
+        }
     });
 
     sub.on('end', function (e) {
@@ -104,10 +108,14 @@ function messageHandler() {
                                 } else {
                                     let status = merge(current, data.value);
 
-                                    //status['_ts'] = new Date().toISOString();
-
                                     if (JSON.stringify(current) !== JSON.stringify(status)) {
                                         statusCache.set(doc.id, status);
+
+                                        status['_ts'] = new Date().toISOString();
+
+                                        ignoreUpdate = true;
+                                        statusCache.set(doc.id, status);
+                                        ignoreUpdate = false;
                                     }
                                 }
                             }
