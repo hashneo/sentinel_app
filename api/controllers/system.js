@@ -23,3 +23,14 @@ module.exports.getDeviceStatus = (req, res) => {
             res.status(err.code >= 400 && err.code <= 451 ? err.code : 500).json( { code: err.code || 0, message: err.message } );
         });
 };
+
+module.exports.deleteDevice = (req, res) => {
+    global.module.deleteDevice(req.swagger.params.id.value)
+        .then( (status) => {
+            res.json( { data: status, result : 'ok' } );
+        })
+        .catch( (err) => {
+            res.status(err.code >= 400 && err.code <= 451 ? err.code : 500).json( { code: err.code || 0, message: err.message } );
+        });
+};
+

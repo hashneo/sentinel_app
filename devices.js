@@ -170,6 +170,22 @@ function devices(){
 
     };
 
+    this.delete = (criteria) => {
+
+        return new Promise( ( fulfill, reject ) => {
+
+            devices.delete(null, criteria)
+                .then( (docs) => {
+                    fulfill();
+                })
+                .catch( (err) => {
+                    reject(err);
+                });
+        });
+
+    };
+
+
     this.insert = (data) => {
 
         if ( !data.plugin.name ){

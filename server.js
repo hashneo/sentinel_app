@@ -42,6 +42,20 @@ function server(config) {
         });
     };
 
+    this.deleteDevice = (id) => {
+
+        return new Promise( ( fulfill, reject ) => {
+
+            devices.delete( { id } )
+                .then( () => {
+                    fulfill([]);
+                })
+                .catch( (err) => {
+                    reject(err);
+                })
+        });
+    };
+
     this.getDevices = () => {
 
         return new Promise( ( fulfill, reject ) => {

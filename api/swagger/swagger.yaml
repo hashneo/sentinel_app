@@ -115,6 +115,30 @@ paths:
         default:
           $ref: '#/responses/Error'
 
+  /device/{id}:
+    x-swagger-router-controller: system
+    delete:
+      operationId: deleteDevice
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+
   /{device}/{id}/*:
     x-swagger-router-controller: proxy
     get:
