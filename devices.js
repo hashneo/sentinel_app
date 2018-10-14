@@ -2,7 +2,6 @@
 
 function devices(){
 
-    let mysql = require( './mysql');
     let db;
 
     const devices = require('./db/collections/devices');
@@ -13,35 +12,6 @@ function devices(){
     const uuid = require('uuid');
 
     const that = this;
-
-    this.init = () => {
-        return new Promise((fulfill, reject) => {
-
-            if ( db !== undefined )
-                return fulfill(this);
-
-            global.schema = global.config.db.schema || 'sentinel';
-
-            mysql.connect(global.config.db)
-                .then((connection) => {
-                    console.log('connection established to database server');
-                    return connection.createDatabase('sql/1.0.sql');
-                })
-                .then((connection) => {
-                    console.log('database has been created');
-                    return connection.useDatabase(global.schema);
-                })
-                .then((database) => {
-                    console.log('now using the sentinel database');
-                    db = database;
-                    fulfill(this);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-
-        });
-    };
 
     function getLocationId(location){
         return new Promise( (fulfill, reject) =>{
@@ -72,50 +42,7 @@ function devices(){
     this.add = (device) => {
         getLocationId(device.location);
     };
-/*
-    this.getDeviceStatus = ( nameOrId ) => {
 
-        let result = undefined;
-
-        devices.findOne({$or: [{id: nameOrId}, {_id: nameOrId}, {name: nameOrId}]}, function (err, doc) {
-            if (doc == null)
-                result = null;
-            else {
-                statusCache.get(doc.id, function (err, value) {
-                    if (!err && result) {
-                        result = value;
-                    } else {
-                        result = null;
-                    }
-                });
-            }
-        });
-
-        require('deasync').loopWhile(function () {
-            return result === undefined;
-        });
-
-        return result;
-    };
-
-    this.findDevice = (nameOrId) => {
-
-        let result = undefined;
-
-        devices.findOne({$or: [{id: nameOrId}, {_id: nameOrId}, {name: nameOrId}]}, function (err, doc) {
-            if (doc == null)
-                result = null;
-            else
-                result = doc;
-        });
-
-        require('deasync').loopWhile(function () {
-            return result === undefined;
-        });
-
-        return result;
-    };
-*/
     this.findDeviceByType = (type) => {
 
         let results = undefined;
