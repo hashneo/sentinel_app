@@ -48,7 +48,7 @@ function messageHandler() {
         let data = JSON.parse(message);
 
         // Ignore from me
-        if ( data.module === 'server')
+        if ( data.name === 'server')
             return;
 
         switch (pattern) {
