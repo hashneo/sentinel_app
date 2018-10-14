@@ -1,6 +1,6 @@
 'use strict';
 
-//require('newrelic');
+require('newrelic');
 
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
