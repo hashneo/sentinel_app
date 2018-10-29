@@ -20,7 +20,6 @@ build_job:
   only:
     - master
   script:
-    - sleep 10m
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN docker.steventaylor.me
     - docker build --force-rm --no-cache --build-arg CI_JOB_AUTH=gitlab-ci-token:$CI_JOB_TOKEN -t $REGISTRY_IMAGE:$CI_PIPELINE_ID-$CI_COMMIT_SHA -t $REGISTRY_IMAGE:latest -f Dockerfile.$BUILD_ARCH .
     - docker push $REGISTRY_IMAGE:$CI_PIPELINE_ID-$CI_COMMIT_SHA
