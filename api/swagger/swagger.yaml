@@ -189,13 +189,9 @@ definitions:
       message:
         type: string
 
-
   Status:
     type: object
     additionalProperties: false
     properties:
       status:
         type: string
-
-  AnyValue:
-    description: Can be anything, including null.

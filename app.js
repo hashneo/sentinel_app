@@ -1,6 +1,8 @@
 'use strict';
 
-require('newrelic');
+if (process.env.NEWRELIC_KEY) {
+    require('newrelic');
+}
 
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
@@ -12,6 +14,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const redis = require('redis');
 const uuid = require('uuid');
+const logger = require('sentinel-common').logger;
 
 const _ = require('underscore');
 
@@ -126,7 +129,7 @@ consul.kv.get(`config/sentinel/${moduleName}`, function(err, result) {
                 }, 5000);
 
                 if (swaggerExpress.runner.swagger.paths['/health']) {
-                    console.log(`you can get /health?id=${serviceId} on port ${port}`);
+                    logger.info(`you can get /health?id=${serviceId} on port ${port}`);
                 }
                 global.module = require(`./${moduleName}.js`)(config);
             });
