@@ -33,7 +33,7 @@ function messageHandler() {
         if ( !ignoreUpdate ) {
             delete value._ts;
             let data = JSON.stringify({module: 'server', id: key, value: value});
-            console.log('sentinel.device.update => ' + data);
+            //console.log('sentinel.device.update => ' + data);
             pub.publish('sentinel.device.update', data);
         }
     });
