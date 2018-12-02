@@ -14,7 +14,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const redis = require('redis');
 const uuid = require('uuid');
-const logger = require('sentinel-common').logger;
 
 const _ = require('underscore');
 
@@ -88,6 +87,8 @@ consul.kv.get(`config/sentinel/${moduleName}`, function(err, result) {
                 next();
             }
         });
+
+        const logger = require('sentinel-common').logger;
 
         let serviceId = process.env.SERVICE_ID || uuid.v4();
 
