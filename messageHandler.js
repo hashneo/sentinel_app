@@ -8,6 +8,9 @@ function messageHandler() {
     const modules = require('./modules');
     const statusCache = require('./statusCache');
     const merge = require('deepmerge');
+    const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+
+    const logger = require('sentinel-common').logger;
 
     const uuid = require('uuid');
 
@@ -33,7 +36,7 @@ function messageHandler() {
         if ( !ignoreUpdate ) {
             delete value._ts;
             let data = JSON.stringify({module: 'server', id: key, value: value});
-            //console.log('sentinel.device.update => ' + data);
+            logger.debug(`sentinel.device.update => ${data}`);
             pub.publish('sentinel.device.update', data);
         }
     });
@@ -107,7 +110,7 @@ function messageHandler() {
                                 if (current === undefined || current === null) {
                                     statusCache.set(doc.id, data.value);
                                 } else {
-                                    let status = merge(current, data.value);
+                                    let status = merge(current, data.value, { arrayMerge: overwriteMerge } );
 
                                     if (JSON.stringify(current) !== JSON.stringify(status)) {
                                         statusCache.set(doc.id, status);
