@@ -56,6 +56,20 @@ function server(config) {
         });
     };
 
+    this.updateDevice = (id, value) => {
+
+        return new Promise( ( fulfill, reject ) => {
+
+            devices.update( { id }, value )
+                .then( () => {
+                    fulfill([]);
+                })
+                .catch( (err) => {
+                    reject(err);
+                })
+        });
+    };
+
     this.getDevices = () => {
 
         return new Promise( ( fulfill, reject ) => {

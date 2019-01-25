@@ -34,3 +34,22 @@ module.exports.deleteDevice = (req, res) => {
         });
 };
 
+module.exports.hideDevice = (req, res) => {
+    global.module.updateDevice(req.swagger.params.id.value, { visible: false } )
+        .then( (status) => {
+            res.json( { data: status, result : 'ok' } );
+        })
+        .catch( (err) => {
+            res.status(err.code >= 400 && err.code <= 451 ? err.code : 500).json( { code: err.code || 0, message: err.message } );
+        });
+};
+
+module.exports.showDevice = (req, res) => {
+    global.module.updateDevice(req.swagger.params.id.value, { visible : true } )
+        .then( (status) => {
+            res.json( { data: status, result : 'ok' } );
+        })
+        .catch( (err) => {
+            res.status(err.code >= 400 && err.code <= 451 ? err.code : 500).json( { code: err.code || 0, message: err.message } );
+        });
+};

@@ -112,6 +112,39 @@ function devices(){
 
     };
 
+    this.update = (criteria, data) => {
+
+        return new Promise( ( fulfill, reject ) => {
+
+            devices.find(null, criteria)
+                .then( (docs) => {
+
+                    if (!docs || docs.length != 1) {
+                        return reject('invalid criteria');
+                    }
+
+                    let device = docs[0];
+
+                    for( let k in data ){
+                        device[k] = data[k];
+                    }
+
+                    devices.save(null, device )
+                        .then( (doc) => {
+                            console.log('updated device => %s, id => %s, name => %s', doc.plugin.name + '.' + doc.plugin.id, doc.id, doc.name);
+                            fulfill(doc);
+                        })
+                        .catch( (err) => {
+                            reject(err);
+                        });
+
+                })
+                .catch( (err) => {
+                    reject(err);
+                });
+        });
+
+    };
 
     this.insert = (data) => {
 
