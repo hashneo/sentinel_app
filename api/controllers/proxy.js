@@ -5,6 +5,8 @@ const request = require('request');
 const modules = require('../../modules');
 const devices = require('../../devices');
 
+const logger = require('sentinel-common').logger;
+
 module.exports.proxyCall = (req, res) => {
 
     let id = req.swagger.params.id.value;
@@ -31,12 +33,9 @@ module.exports.proxyCall = (req, res) => {
 
                 // either http or https
                 const http = require( endpoint.split(':')[0] );
-/*
-                let options = {
-                    url: endpoint + rawUrl,
-                    timeout: 90000
-                };
-*/
+
+                logger.info(`calling => ${endpoint + rawUrl}`);
+
                 http.get(endpoint + rawUrl, (resp) => {
                     let data = new Buffer(0);
 
@@ -51,30 +50,12 @@ module.exports.proxyCall = (req, res) => {
                     });
 
                 }).on('error', (err) => {
+
+                    logger.error(`error in proxy call => ${err}`);
+
                     return res.status(500).json( { code: 500, message: err.message } );
                 });
-/*
 
-                request(options, (err, response, body) => {
-                    if (err)
-                        return res.status(500).json( { code: 500, message: err.message } );
-
-                    if (response.statusCode == 200) {
-
-                        const fs = require('fs');
-                        const stream = fs.createWriteStream('/Users/staylor/test.jpg');
-                        stream.write(body, () => {
-                            stream.close();
-                        })
-
-                        res.type(response.headers['content-type']);
-                        res.send(new Buffer(body, 'binary'));
-                        res.status(200).end();
-                    }else{
-                        res.status(response.statusCode).json( { code: response.statusCode, message: '' } );
-                    }
-                });
-*/
             } else {
                 return res.status(500).json( { code: 500, message: 'No plugin found for device' } );
             }
