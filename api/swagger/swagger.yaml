@@ -29,7 +29,7 @@ securityDefinitions:
     authorizationUrl: https://my_aouth/
 
 security:
-  - Oauth: []
+- Oauth: []
 
 paths:
   /health:
@@ -72,10 +72,10 @@ paths:
         default:
           $ref: '#/responses/Error'
 
-  /status:
+  /devices:
     x-swagger-router-controller: system
     get:
-      operationId: getStatus
+      operationId: getDevices
       security:
       - Oauth:
         - user
@@ -115,56 +115,55 @@ paths:
         default:
           $ref: '#/responses/Error'
 
-  /device/{id}/hide:
-    x-swagger-router-controller: system
-    get:
-      operationId: hideDevice
-      security:
-      - Oauth:
-        - user
-        - admin
-        - system
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        200:
-          description: ok
-          schema:
-            type: object
-        default:
-          $ref: '#/responses/Error'
-
-  /device/{id}/show:
-    x-swagger-router-controller: system
-    get:
-      operationId: showDevice
-      security:
-      - Oauth:
-        - user
-        - admin
-        - system
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        200:
-          description: ok
-          schema:
-            type: object
-        default:
-          $ref: '#/responses/Error'
-
   /device/{id}:
     x-swagger-router-controller: system
+    get:
+      operationId: getDeviceStatus2
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
+    patch:
+      operationId: patchDevice
+      security:
+      - Oauth:
+        - user
+        - admin
+        - system
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      - in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/deviceUpdate'
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/Error'
     delete:
       operationId: deleteDevice
       security:
@@ -215,7 +214,7 @@ paths:
           $ref: '#/responses/Error'
 
   /swagger:
-      x-swagger-pipe: swagger_raw
+    x-swagger-pipe: swagger_raw
 
 responses:
 
@@ -226,10 +225,24 @@ responses:
 
 definitions:
 
+  deviceUpdate:
+    additionalProperties: false
+    required:
+    - state
+    properties:
+      name:
+        type: string
+      visible:
+        type: boolean
+      where:
+        type: object
+      state:
+        type: object
+
   Error:
     required:
-      - code
-      - message
+    - code
+    - message
     properties:
       code:
         type: integer
