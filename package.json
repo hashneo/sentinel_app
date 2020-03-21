@@ -24,7 +24,7 @@
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "sentinel-common": "git+http://gitlab.steventaylor.me/sentinel/common.git",
+    "sentinel-common": "git+https://github.com/hashneo/sentinel_common.git",
     "sleep": "^5.2.3",
     "superagent": "^4.0.0",
     "superagent-proxy": "^2.0.0",
