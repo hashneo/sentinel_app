@@ -10,38 +10,49 @@ spec:
     protocol: TCP
     targetPort: 5000
   selector:
-    app: app
+    app: sentinel-app
     context: sentinel
     version: v1
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sentinel-app
+  labels:
+    app: sentinel-app
+    context: sentinel
+    version: v1
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: sentinel-app
   template:
     metadata:
       labels:
-        app: app
-        context: sentinel
-        version: v1
+        app: sentinel-app
     spec:
       containers:
         -
           name: sentinel-app
-          image: docker.steventaylor.me/sentinel/app/app-x86_64:latest
+          image: docker.io/hashneo/sentinel-app-x86_64:latest
           imagePullPolicy: Always
           env:
           - name: PORT
             value: "5000"
           - name: CONSUL
             value: "consul"
+          - name: NEW_RELIC_NO_CONFIG_FILE
+            value: "true"
+          - name: NEW_RELIC_ENABLED
+            value: "true"
+          - name: NEW_RELIC_APP_NAME
+            value: "Sentinel Application"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: ""
           ports:
             -
               containerPort: 5000
               protocol: TCP
-      imagePullSecrets:
-      - name: regcred
       nodeSelector:
           beta.kubernetes.io/arch: amd64
