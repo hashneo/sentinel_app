@@ -1,8 +1,6 @@
 'use strict';
 
-if (process.env.NEWRELIC_KEY) {
-    require('newrelic');
-}
+require('newrelic');
 
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
@@ -140,10 +138,10 @@ consul.kv.get(`config/sentinel/${moduleName}`, function(err, result) {
     });
 
 });
-
+/*
 process.on('unhandledRejection', (reason, p) => {
     console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
     process.exit(1);
 });
-
+*/
 module.exports = app;
