@@ -31,6 +31,9 @@ module.exports.find = (uuid, criteria) => {
                     .catch(function (err) {
                         reject(err);
                     });
+            })
+            .catch(function (err) {
+                reject(err);
             });
     });
 };
@@ -58,6 +61,9 @@ module.exports.save = (uuid, data) => {
                             reject(err);
                         }
                     });
+            })
+            .catch(function (err) {
+                reject(err);
             });
     });
 };
@@ -75,6 +81,9 @@ module.exports.update = (uuid, data) => {
                     .catch((err) => {
                         reject(err);
                     });
+            })
+            .catch(function (err) {
+                reject(err);
             });
     });
 };
@@ -91,6 +100,9 @@ module.exports.delete = (uuid, data) => {
                     .catch((err) => {
                         reject(err);
                     });
+            })
+            .catch(function (err) {
+                reject(err);
             });
     });
 };
