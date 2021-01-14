@@ -14,7 +14,7 @@ module.exports.proxyCall = (req, res) => {
     devices.find({id})
         .then( (devices) => {
 
-            if (devices.length != 1)
+            if (devices.length !== 1)
                 return res.status(404).json({code: 404, message: 'not found'});
 
             let device = devices[0];
@@ -36,7 +36,15 @@ module.exports.proxyCall = (req, res) => {
 
                 logger.info(`calling => ${endpoint + rawUrl}`);
 
-                http.get(endpoint + rawUrl, (resp) => {
+                const options = {
+                    headers: {
+                    }
+                };
+
+                if ( req.headers['authorization'] )
+                    options.headers['authorization'] = req.headers['authorization'];
+
+                http.get(endpoint + rawUrl, options, (resp) => {
                     let data = new Buffer(0);
 
                     resp.on('data', (chunk) => {

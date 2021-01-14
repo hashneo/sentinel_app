@@ -23,9 +23,9 @@ function Request() {
             rp(options)
                 .then ( (response) => {
 
-                    if (response.statusCode == 200) {
-                        if (response.headers['content-type'].toLowerCase().indexOf('/json') != -1) {
-                            var result = JSON.parse(response.body).data;
+                    if (response.statusCode === 200) {
+                        if (response.headers['content-type'].toLowerCase().indexOf('/json') !== -1) {
+                            let result = JSON.parse(response.body).data;
                             fulfill(result);
                         } else {
                             fulfill({type: response.headers['content-type'], data: response.body});
