@@ -4,7 +4,7 @@ const db = require('sentinel-common').db;
 
 
 function getCollection(){
-    return db.createCollection('devices2');
+    return db.createCollection('devices');
 }
 
 module.exports.find = (uuid, criteria) => {

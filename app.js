@@ -4,7 +4,6 @@ require('newrelic');
 
 const SwaggerExpress = require('swagger-express-mw');
 const SwaggerUi = require('swagger-tools/middleware/swagger-ui');
-//const jwtVerifier = require('jwt-verifier-client')(require('./config').jwtVerifierUrl);
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -13,10 +12,7 @@ const session = require('express-session');
 const redis = require('redis');
 const uuid = require('uuid');
 
-const _ = require('underscore');
-
-const fs = require('fs');
-const path = require('path');
+const logger = require('sentinel-common').logger;
 
 const consul = require('consul')( {
     host: process.env.CONSUL || '127.0.0.1',
@@ -28,7 +24,6 @@ let moduleName = 'server';
 global.app = app;
 
 app.use(bodyParser.json({limit: '50mb'}));
-
 app.use(cookieParser());
 
 consul.kv.get(`config/sentinel/${moduleName}`, function(err, result) {
@@ -85,8 +80,6 @@ consul.kv.get(`config/sentinel/${moduleName}`, function(err, result) {
                 next();
             }
         });
-
-        const logger = require('sentinel-common').logger;
 
         let serviceId = process.env.SERVICE_ID || uuid.v4();
 
