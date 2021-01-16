@@ -162,7 +162,7 @@ function devices(){
 
                         delete device.status;
 
-                        if (!docs || docs.length == 0) {
+                        if (!docs || docs.length === 0) {
 
                             delete device.id;
                             delete device.current;
@@ -173,6 +173,10 @@ function devices(){
                                     fulfill(doc);
                                 })
                                 .catch( (err) => {
+                                    if (err.code === 11000) {
+                                        console.log('Duplicate device ignored => %s, name => %s', device.plugin.name + '.' + device.plugin.id, device.name);
+                                        return fulfill();
+                                    }
                                     reject(err);
                                 });
 
@@ -221,36 +225,38 @@ function devices(){
         findOrInsert(d)
             .then( (doc) => {
 
-                const modules = require('./modules');
+                if ( doc ) {
 
-                let module = modules.find(doc.plugin);
+                    const modules = require('./modules');
 
-                if (!module) {
-                    return;
+                    let module = modules.find(doc.plugin);
+
+                    if (!module) {
+                        return;
+                    }
+
+                    let options = {
+                        url: module.endpoint + '/device/' + doc.plugin.id + '/status',
+                        timeout: 90000
+                    };
+
+                    try {
+                        request(options, (err, response, body) => {
+                            if (!err && response.statusCode === 200) {
+                                body = JSON.parse(body);
+
+                                let data = body.data;
+
+                                data.status['_ts'] = new Date().toISOString();
+
+                                statusCache.set(doc.id, data.status);
+                            }
+                        });
+                    } catch (err) {
+                        console.error(err);
+                        //reject(e);
+                    }
                 }
-
-                let options = {
-                    url : module.endpoint + '/device/' + doc.plugin.id + '/status',
-                    timeout : 90000
-                };
-
-                try {
-                    request(options, (err, response, body) => {
-                        if (!err && response.statusCode === 200) {
-                            body = JSON.parse(body);
-
-                            let data = body.data;
-
-                            data.status['_ts'] = new Date().toISOString();
-
-                            statusCache.set(doc.id, data.status);
-                        }
-                    });
-                }catch(err){
-                    console.error(err);
-                    //reject(e);
-                }
-
 
             })
             .catch( (err) =>{

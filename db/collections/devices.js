@@ -2,9 +2,32 @@
 
 const db = require('sentinel-common').db;
 
+let c = null;
 
 function getCollection(){
-    return db.createCollection('devices');
+
+    return new Promise( (fulfill, reject) => {
+
+        if ( c == null ) {
+            db.createCollection('devices')
+                .then((collection) => {
+
+                    collection.createIndex( { "value.plugin.id" : 1, "value.plugin.name" : 1 } )
+                        .then( () =>{
+                            c = collection;
+                            fulfill(c);
+                        })
+                        .catch ( (err) => {
+                            reject(err);
+                        })
+                })
+                .catch ( (err) => {
+                    reject(err);
+                })
+        } else {
+            fulfill(c);
+        }
+    });
 }
 
 module.exports.find = (uuid, criteria) => {
@@ -49,7 +72,7 @@ module.exports.save = (uuid, data) => {
                         fulfill(data);
                     })
                     .catch((err) => {
-                        if (err.code === 11000) {
+                        if (err.code === 11000) {/*
                             collection.update(uuid, data)
                                 .then(() => {
                                     fulfill(data);
@@ -57,6 +80,8 @@ module.exports.save = (uuid, data) => {
                                 .catch((err) => {
                                     reject(err);
                                 });
+                                */
+                            reject(err);
                         } else {
                             reject(err);
                         }
