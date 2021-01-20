@@ -36,15 +36,19 @@ module.exports.proxyCall = (req, res) => {
 
                 logger.info(`calling => ${endpoint + rawUrl}`);
 
+                let u = new URL(endpoint + rawUrl);
+
                 const options = {
-                    headers: {
-                    }
+                    method: 'GET',
+                    hostname: u.hostname,
+                    port: u.port,
+                    path: rawUrl
                 };
 
                 if ( req.headers['authorization'] )
                     options.headers['authorization'] = req.headers['authorization'];
 
-                http.get(endpoint + rawUrl, options, (resp) => {
+                http.get(options, (resp) => {
                     let data = new Buffer(0);
 
                     resp.on('data', (chunk) => {
