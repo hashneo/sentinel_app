@@ -45,8 +45,11 @@ module.exports.proxyCall = (req, res) => {
                     path: rawUrl
                 };
 
-                if ( req.headers['authorization'] )
-                    options.headers['authorization'] = req.headers['authorization'];
+                if ( req.headers['authorization'] ) {
+                    options.headers = {
+                        authorization: req.headers['authorization']
+                    }
+                }
 
                 http.get(options, (resp) => {
                     let data = new Buffer(0);
