@@ -153,7 +153,7 @@ function server(config) {
 
                     devices.forEach ( (device) =>  {
 
-                        delete device.plugin;
+//                        delete device.plugin;
                         delete device.current;
 
                         let keys = Object.keys(device);
@@ -206,7 +206,7 @@ function server(config) {
 
                     devices.forEach ( (device) =>  {
 
-                        delete device.plugin;
+                        //delete device.plugin;
                         delete device.current;
 
                         let keys = Object.keys(device);
