@@ -8,6 +8,7 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "@kubernetes/client-node": "^0.15.0",
     "array.prototype.find": "^2.0.4",
     "body-parser": "^1.18.3",
     "consul": "^0.34.1",

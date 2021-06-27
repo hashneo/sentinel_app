@@ -8,7 +8,7 @@ function messageHandler() {
     const modules = require('./modules');
     const statusCache = require('./statusCache');
     const merge = require('deepmerge');
-    const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+    const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray;
 
     const logger = require('sentinel-common').logger;
 
@@ -57,6 +57,7 @@ function messageHandler() {
         switch (pattern) {
             case 'sentinel.module.start':
             case 'sentinel.module.running':
+/*
                 let i = modules.find(data);
 
                 if (!i) {
@@ -82,7 +83,7 @@ function messageHandler() {
                     i.active = true;
                 }
                 break;
-
+*/
             case 'sentinel.device.insert':
 
                 let device = data.value;
