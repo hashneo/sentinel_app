@@ -82,8 +82,10 @@ function messageHandler() {
                     i.endpoint = data.endpoint;
                     i.active = true;
                 }
+
+ */
                 break;
-*/
+
             case 'sentinel.device.insert':
 
                 let device = data.value;
